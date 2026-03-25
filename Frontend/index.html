@@ -22,6 +22,7 @@
     <button class="auth-btn" id="authBtn" onclick="showPage('login')">Login</button>
     <span id="userName" style="display:none;color:#fff;font-weight:600;margin-left:10px"></span>
     <button id="logoutBtn" style="display:none" class="logout-btn" onclick="logout()">Logout</button>
+    <button class="nav-btn" onclick="openChat()">💬 AI</button>
   </div>
 </nav>
 
@@ -54,6 +55,8 @@
         <option value="Fashion">Fashion</option>
         <option value="Accessories">Accessories</option>
       </select>
+      <button class="camera-btn" onclick="openCamera()">📷 Image Search</button>
+      <button class="add-btn" onclick="openAddProduct()">➕ Add Product</button>
     </div>
   </div>
   <div id="productsGrid" class="products-grid"></div>
@@ -95,6 +98,50 @@
     <button class="cta-btn" onclick="register()">Register</button>
     <p>Already have an account? <a href="#" onclick="showPage('login')">Login</a></p>
     <p id="regMsg" class="msg"></p>
+  </div>
+</div>
+
+<!-- CAMERA MODAL -->
+<div id="cameraModal" class="modal">
+  <div class="modal-content">
+    <h3>📷 Capture Product Image</h3>
+    <video id="video" autoplay style="width:100%;max-width:400px;"></video>
+    <canvas id="canvas" style="display:none;"></canvas>
+    <div style="margin-top:10px;">
+      <button class="cta-btn" onclick="captureImage()">Capture & Search</button>
+      <button class="cta-btn" onclick="closeModal('cameraModal')">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- CHAT MODAL -->
+<div id="chatModal" class="modal">
+  <div class="modal-content chat-modal">
+    <h3>💬 AI Assistant</h3>
+    <div id="chatMessages" class="chat-messages"></div>
+    <div class="chat-input">
+      <input type="text" id="chatInput" placeholder="Ask me anything..." onkeypress="if(event.key==='Enter') sendMessage()"/>
+      <button onclick="sendMessage()">Send</button>
+    </div>
+    <button class="close-btn" onclick="closeModal('chatModal')">×</button>
+  </div>
+</div>
+
+<!-- ADD PRODUCT MODAL -->
+<div id="addProductModal" class="modal">
+  <div class="modal-content">
+    <h3>➕ Add New Product</h3>
+    <input type="text" id="prodName" placeholder="Product Name"/>
+    <textarea id="prodDesc" placeholder="Description"></textarea>
+    <input type="number" id="prodPrice" placeholder="Price"/>
+    <select id="prodCategory">
+      <option value="Electronics">Electronics</option>
+      <option value="Fashion">Fashion</option>
+      <option value="Accessories">Accessories</option>
+    </select>
+    <input type="text" id="prodImage" placeholder="Image URL"/>
+    <button class="cta-btn" onclick="addProduct()">Add Product</button>
+    <button class="cta-btn" onclick="closeModal('addProductModal')">Cancel</button>
   </div>
 </div>
 

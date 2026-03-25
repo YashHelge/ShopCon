@@ -1,6 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const Product = require('./Product');
+const multer = require('multer');
+const OpenAI = require('openai');
+const fs = require('fs');
+
+const upload = multer({ dest: 'uploads/' });
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 // Get all products (with optional search/filter)
 router.get('/', async (req, res) => {
@@ -28,6 +34,18 @@ router.get('/:id', async (req, res) => {
   }
 });
 
+// Add new product
+router.post('/', async (req, res) => {
+  try {
+    const { name, description, price, category, image } = req.body;
+    const product = new Product({ name, description, price, category, image });
+    await product.save();
+    res.json({ message: 'Product added', product });
+  } catch (err) {
+    res.status(500).json({ message: 'Add error', error: err.message });
+  }
+});
+
 // Seed sample products (run once)
 router.post('/seed', async (req, res) => {
   try {
@@ -46,6 +64,38 @@ router.post('/seed', async (req, res) => {
     res.json({ message: '✅ Products seeded successfully!', count: products.length });
   } catch (err) {
     res.status(500).json({ message: 'Seed error', error: err.message });
+  }
+});
+
+// Search products by image
+router.post('/search-image', upload.single('image'), async (req, res) => {
+  try {
+    if (!req.file) return res.status(400).json({ message: 'No image uploaded' });
+
+    const imagePath = req.file.path;
+    const imageBuffer = fs.readFileSync(imagePath);
+
+    const response = await openai.chat.completions.create({
+      model: 'gpt-4-vision-preview',
+      messages: [
+        {
+          role: 'user',
+          content: [
+            { type: 'text', text: 'Describe this product image in detail, focusing on what it is, color, style, etc. Keep it concise.' },
+            { type: 'image_url', image_url: { url: `data:image/jpeg;base64,${imageBuffer.toString('base64')}` } }
+          ]
+        }
+      ],
+      max_tokens: 100
+    });
+
+    const description = response.choices[0].message.content;
+    const products = await Product.find({ name: { $regex: description, $options: 'i' } }).limit(10);
+
+    fs.unlinkSync(imagePath); // Clean up
+    res.json({ description, products });
+  } catch (err) {
+    res.status(500).json({ message: 'Image search error', error: err.message });
   }
 });
 

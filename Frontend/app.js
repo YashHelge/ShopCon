@@ -299,6 +299,108 @@ function showFlash(msg) {
   setTimeout(() => el.remove(), 2500);
 }
 
+// ─── Modals ────────────────────────────────────────────────────────────────
+function openModal(id) { document.getElementById(id).classList.add('active'); }
+function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+// ─── Camera ────────────────────────────────────────────────────────────────
+async function openCamera() {
+  openModal('cameraModal');
+  const video = document.getElementById('video');
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+    video.srcObject = stream;
+  } catch (e) {
+    alert('Camera access denied or not available.');
+    closeModal('cameraModal');
+  }
+}
+
+function captureImage() {
+  const video = document.getElementById('video');
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  ctx.drawImage(video, 0, 0);
+  canvas.toBlob(async (blob) => {
+    const formData = new FormData();
+    formData.append('image', blob, 'capture.jpg');
+    try {
+      const res = await fetch(`${API}/products/search-image`, { method: 'POST', body: formData });
+      const data = await res.json();
+      if (!res.ok) { alert(data.message); return; }
+      alert(`AI Description: ${data.description}`);
+      renderProducts(data.products);
+      showPage('products');
+    } catch (e) {
+      alert('Image search failed.');
+    }
+    closeModal('cameraModal');
+    video.srcObject.getTracks().forEach(track => track.stop());
+  });
+}
+
+// ─── Chat ───────────────────────────────────────────────────────────────────
+function openChat() {
+  openModal('chatModal');
+  document.getElementById('chatMessages').innerHTML = '<p>Hi! How can I help you with shopping?</p>';
+}
+
+async function sendMessage() {
+  const input = document.getElementById('chatInput');
+  const msg = input.value.trim();
+  if (!msg) return;
+  const messages = document.getElementById('chatMessages');
+  messages.innerHTML += `<p><strong>You:</strong> ${msg}</p>`;
+  input.value = '';
+  try {
+    const res = await fetch(`${API}/ai/chat`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: msg })
+    });
+    const data = await res.json();
+    messages.innerHTML += `<p><strong>AI:</strong> ${data.reply}</p>`;
+    messages.scrollTop = messages.scrollHeight;
+  } catch (e) {
+    messages.innerHTML += `<p><strong>AI:</strong> Sorry, I'm having trouble connecting.</p>`;
+  }
+}
+
+// ─── Add Product ────────────────────────────────────────────────────────────
+function openAddProduct() {
+  openModal('addProductModal');
+}
+
+async function addProduct() {
+  const name = document.getElementById('prodName').value.trim();
+  const description = document.getElementById('prodDesc').value.trim();
+  const price = parseFloat(document.getElementById('prodPrice').value);
+  const category = document.getElementById('prodCategory').value;
+  const image = document.getElementById('prodImage').value.trim();
+
+  if (!name || !description || !price || !category || !image) {
+    alert('Please fill all fields.');
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API}/products`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, description, price, category, image })
+    });
+    const data = await res.json();
+    if (!res.ok) { alert(data.message); return; }
+    alert('Product added!');
+    closeModal('addProductModal');
+    loadProducts(); // Refresh
+  } catch (e) {
+    alert('Failed to add product.');
+  }
+}
+
 // ─── Init ──────────────────────────────────────────────────────────────────
 updateAuthUI();
 showPage('home');

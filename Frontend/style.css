@@ -310,6 +310,20 @@ body {
   transition: border-color 0.2s;
 }
 .auth-box input:focus { border-color: var(--accent); }
+.auth-box textarea {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  margin-bottom: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+  resize: vertical;
+}
+.auth-box textarea:focus { border-color: var(--accent); }
 .auth-box .cta-btn { width: 100%; margin-bottom: 16px; }
 .auth-box p { color: var(--muted); font-size: 0.9rem; text-align: center; }
 .auth-box a { color: var(--accent); text-decoration: none; }
@@ -327,3 +341,40 @@ body {
   .products-header { flex-direction: column; }
   .filters { flex-direction: column; }
 }
+
+/* MODALS */
+.modal {
+  display: none;
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.8); z-index: 1000;
+  align-items: center; justify-content: center;
+}
+.modal.active { display: flex; }
+.modal-content {
+  background: var(--card); border-radius: 20px; padding: 20px;
+  max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto;
+}
+.close-btn {
+  position: absolute; top: 10px; right: 15px;
+  background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text);
+}
+
+/* CAMERA */
+.camera-btn {
+  background: var(--accent); color: #000; border: none;
+  padding: 10px 16px; border-radius: 50px; cursor: pointer; font-weight: 600;
+}
+.add-btn {
+  background: var(--accent2); color: #fff; border: none;
+  padding: 10px 16px; border-radius: 50px; cursor: pointer; font-weight: 600;
+}
+
+/* CHAT */
+.chat-modal { position: relative; }
+.chat-messages {
+  height: 300px; overflow-y: auto; border: 1px solid var(--border);
+  border-radius: 10px; padding: 10px; margin-bottom: 10px; background: var(--surface);
+}
+.chat-input { display: flex; gap: 10px; }
+.chat-input input { flex: 1; padding: 10px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface); color: var(--text); }
+.chat-input button { padding: 10px 20px; background: var(--accent); color: #000; border: none; border-radius: 10px; cursor: pointer; }
