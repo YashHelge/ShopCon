@@ -1,0 +1,39 @@
+version: "3.9"
+services:
+  mongodb:
+    image: mongo:6
+    restart: unless-stopped
+    volumes:
+      - mongo_data:/data/db
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: shopcon
+
+  backend:
+    build:
+      context: ./Backend
+    ports:
+      - "5000:5000"
+    environment:
+      PORT: 5000
+      MONGO_URI: mongodb://mongodb:27017/shopcon
+      JWT_SECRET: shopcon_super_secret_key_2024
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+    depends_on:
+      - mongodb
+    volumes:
+      - ./Backend/uploads:/app/uploads
+    restart: unless-stopped
+
+  frontend:
+    image: nginx:alpine
+    ports:
+      - "3000:80"
+    volumes:
+      - ./Frontend:/usr/share/nginx/html:ro
+    depends_on:
+      - backend
+
+volumes:
+  mongo_data:

@@ -1,4 +1,4 @@
-const API = 'http://localhost:5000/api';
+const API = window.API_URL || 'http://localhost:5000/api';
 let cart = JSON.parse(localStorage.getItem('shopcon_cart') || '[]');
 let token = localStorage.getItem('shopcon_token');
 let user = JSON.parse(localStorage.getItem('shopcon_user') || 'null');

@@ -1,0 +1,11 @@
+[build]
+  publish = "Frontend"
+  command = "echo 'No build step'"
+
+[build.environment]
+  API_URL = "https://your-backend.onrender.com/api"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
