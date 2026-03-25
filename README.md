@@ -32,8 +32,18 @@ A full-stack e-commerce application built with Node.js, Express, MongoDB, and va
 
 ### Prerequisites
 - Node.js (v14 or higher)
-- MongoDB (local or cloud instance)
+- MongoDB (local or cloud instance) - **For deployment, use MongoDB Atlas**
 - OpenAI API Key (for AI features)
+
+### Database Setup (MongoDB Atlas for Production)
+1. Go to [MongoDB Atlas](https://www.mongodb.com/atlas) and create a free account.
+2. Create a new cluster (free tier).
+3. In "Network Access", allow access from anywhere (0.0.0.0/0) for Render.
+4. In "Database Access", create a user with read/write permissions.
+5. Get the connection string from "Connect" > "Connect your application".
+6. Replace `<username>`, `<password>`, and `<cluster>` in the URI.
+
+Example URI: `mongodb+srv://myuser:mypassword@cluster0.xxxxx.mongodb.net/shopcon?retryWrites=true&w=majority`
 
 ### Installation
 
@@ -86,6 +96,38 @@ A full-stack e-commerce application built with Node.js, Express, MongoDB, and va
 4. **Access the application**
    - Frontend: http://localhost:3000
    - Backend API: http://localhost:5000
+
+## Deployment
+
+### Backend (Render)
+1. Create a Render account at [render.com](https://render.com).
+2. Create a new "Web Service" and connect your GitHub repo `YashHelge/ShopCon`.
+3. Set build settings:
+   - **Root Directory**: `Backend`
+   - **Build Command**: `npm install`
+   - **Start Command**: `node server.js`
+4. Set environment variables:
+   - `PORT`: `5000`
+   - `MONGO_URI`: Your MongoDB Atlas URI
+   - `JWT_SECRET`: A secure random string
+   - `OPENAI_API_KEY`: Your OpenAI API key
+5. Deploy. Your backend will be at `https://your-service.onrender.com`.
+
+### Frontend (Netlify/Vercel)
+1. Go to [netlify.com](https://netlify.com) or [vercel.com](https://vercel.com).
+2. Connect your GitHub repo.
+3. Set build settings:
+   - **Build Command**: (leave empty for static)
+   - **Publish Directory**: `Frontend`
+4. Set environment variable (if needed):
+   - `API_URL`: `https://your-backend.onrender.com/api`
+5. Deploy. Your frontend will be at `https://your-site.netlify.app`.
+
+### Update Frontend API URL
+In production, update `Frontend/app.js`:
+```js
+const API = 'https://your-backend.onrender.com/api';
+```
 
 ## API Endpoints
 
