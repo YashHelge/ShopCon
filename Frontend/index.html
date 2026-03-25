@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ShopCon</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="navbar">
+  <div class="logo">🛒 ShopCon</div>
+  <div class="nav-links">
+    <a href="#" onclick="showPage('home')">Home</a>
+    <a href="#" onclick="showPage('products')">Products</a>
+    <a href="#" onclick="showPage('orders')" id="ordersLink" style="display:none">My Orders</a>
+  </div>
+  <div class="nav-right">
+    <button class="cart-btn" onclick="showPage('cart')">🛍️ Cart <span id="cartCount">0</span></button>
+    <button class="auth-btn" id="authBtn" onclick="showPage('login')">Login</button>
+    <span id="userName" style="display:none;color:#fff;font-weight:600;margin-left:10px"></span>
+    <button id="logoutBtn" style="display:none" class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+</nav>
+
+<!-- HOME PAGE -->
+<div id="homePage" class="page active">
+  <div class="hero">
+    <div class="hero-content">
+      <h1>Shop Smart.<br/>Shop <span class="accent">ShopCon.</span></h1>
+      <p>Discover thousands of products at the best prices. Fast delivery, secure payments.</p>
+      <button class="cta-btn" onclick="showPage('products')">Browse Products →</button>
+    </div>
+    <div class="hero-img">🛒</div>
+  </div>
+  <div class="categories-row">
+    <div class="cat-card" onclick="filterCategory('Electronics')">📱 Electronics</div>
+    <div class="cat-card" onclick="filterCategory('Fashion')">👗 Fashion</div>
+    <div class="cat-card" onclick="filterCategory('Accessories')">🎒 Accessories</div>
+  </div>
+</div>
+
+<!-- PRODUCTS PAGE -->
+<div id="productsPage" class="page">
+  <div class="products-header">
+    <h2>All Products</h2>
+    <div class="filters">
+      <input type="text" id="searchInput" placeholder="🔍 Search products..." oninput="searchProducts()"/>
+      <select id="categoryFilter" onchange="searchProducts()">
+        <option value="All">All Categories</option>
+        <option value="Electronics">Electronics</option>
+        <option value="Fashion">Fashion</option>
+        <option value="Accessories">Accessories</option>
+      </select>
+    </div>
+  </div>
+  <div id="productsGrid" class="products-grid"></div>
+</div>
+
+<!-- CART PAGE -->
+<div id="cartPage" class="page">
+  <h2>Your Cart 🛍️</h2>
+  <div id="cartItems"></div>
+  <div id="cartTotal" class="cart-total"></div>
+  <button class="cta-btn" onclick="checkout()" id="checkoutBtn" style="display:none">Place Order</button>
+</div>
+
+<!-- ORDERS PAGE -->
+<div id="ordersPage" class="page">
+  <h2>My Orders 📦</h2>
+  <div id="ordersList"></div>
+</div>
+
+<!-- LOGIN PAGE -->
+<div id="loginPage" class="page">
+  <div class="auth-box">
+    <h2>Login to ShopCon</h2>
+    <input type="email" id="loginEmail" placeholder="Email"/>
+    <input type="password" id="loginPassword" placeholder="Password"/>
+    <button class="cta-btn" onclick="login()">Login</button>
+    <p>Don't have an account? <a href="#" onclick="showPage('register')">Register</a></p>
+    <p id="loginMsg" class="msg"></p>
+  </div>
+</div>
+
+<!-- REGISTER PAGE -->
+<div id="registerPage" class="page">
+  <div class="auth-box">
+    <h2>Create Account</h2>
+    <input type="text" id="regName" placeholder="Full Name"/>
+    <input type="email" id="regEmail" placeholder="Email"/>
+    <input type="password" id="regPassword" placeholder="Password"/>
+    <button class="cta-btn" onclick="register()">Register</button>
+    <p>Already have an account? <a href="#" onclick="showPage('login')">Login</a></p>
+    <p id="regMsg" class="msg"></p>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
