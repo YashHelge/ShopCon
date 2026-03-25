@@ -361,6 +361,10 @@ async function sendMessage() {
       body: JSON.stringify({ message: msg })
     });
     const data = await res.json();
+    if (!res.ok) {
+      messages.innerHTML += `<p><strong>AI:</strong> ${data.message || 'Error'}</p>`;
+      return;
+    }
     messages.innerHTML += `<p><strong>AI:</strong> ${data.reply}</p>`;
     messages.scrollTop = messages.scrollHeight;
   } catch (e) {

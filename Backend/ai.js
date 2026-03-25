@@ -9,11 +9,12 @@ router.post('/chat', async (req, res) => {
   try {
     const { message } = req.body;
     const completion = await openai.chat.completions.create({
-      model: 'gpt-3.5-turbo',
+      model: 'gpt-4o-mini',
       messages: [{ role: 'user', content: message }],
     });
     res.json({ reply: completion.choices[0].message.content });
   } catch (err) {
+    console.error('AI Chat Error:', err.message);
     res.status(500).json({ message: 'AI error', error: err.message });
   }
 });
