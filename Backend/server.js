@@ -24,6 +24,12 @@ app.get('/', (req, res) => {
 // Connect to MongoDB and start server
 const PORT = process.env.PORT || 5000;
 
+function startServer() {
+  app.listen(PORT, () => {
+    console.log(`🚀 Server running on port ${PORT}`);
+  });
+}
+
 if (process.env.MONGO_URI) {
   mongoose.connect(process.env.MONGO_URI)
     .then(() => {
@@ -35,12 +41,6 @@ if (process.env.MONGO_URI) {
       startServer();
     });
 } else {
-  console.log('⚠️ No MONGO_URI, starting without DB...');
+  console.log('⚠️ MONGO_URI not found, skipping DB connection');
   startServer();
-}
-
-function startServer() {
-  app.listen(PORT, () => {
-    console.log(`🚀 Server running on port ${PORT}`);
-  });
 }
