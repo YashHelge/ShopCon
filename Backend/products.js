@@ -4,8 +4,11 @@ const Product = require('./Product');
 const multer = require('multer');
 const OpenAI = require('openai');
 const fs = require('fs');
+const path = require('path');
 
-const upload = multer({ dest: 'uploads/' });
+const uploadDir = path.join(process.env.TMPDIR || process.env.TEMP || '/tmp', 'shopcon_uploads');
+fs.mkdirSync(uploadDir, { recursive: true });
+const upload = multer({ dest: uploadDir });
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 // Get all products (with optional search/filter)
