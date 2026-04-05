@@ -38,6 +38,7 @@ if (process.env.MONGO_URI) {
     })
     .catch(err => {
       console.log('❌ MongoDB Error:', err);
+      console.log("Updated version");
       startServer();
     });
 } else {
